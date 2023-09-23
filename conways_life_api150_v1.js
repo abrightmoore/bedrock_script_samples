@@ -43,8 +43,8 @@ mc.system.runInterval(() => {
 			num_neighbours = 0;
 			for (let dy = -1; dy < 2; dy++) {
 				for (let dx = -1; dx < 2; dx++) {
-					px = x+dx;
-					py = y+dy;
+					px = (x+dx)%field_size;
+					py = (y+dy)%field_size;
 					if ((0 <= px) && (px < field_size) && (0 <= py) && (py < field_size) && !(dx == 0 && dy == 0)) {
 						if (field_frames[current_frame][py][px] > 0) {
 							num_neighbours += 1;
