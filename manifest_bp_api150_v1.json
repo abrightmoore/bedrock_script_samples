@@ -1,0 +1,35 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "TWF Scripts",
+		"description": "TWF Scripts Behavior Pack",
+		"uuid": "68636dc2-8b19-495d-ab1d-6d7af27e8b7d",
+		"version": [1, 0, 0],
+		"min_engine_version": [1, 20, 0]
+	},
+	"metadata": {
+		"authors": ["TheWorldFoundry"]
+	},
+	"modules": [
+		{
+			"description": "Behavior",
+			"type": "data",
+			"uuid": "c6ee1919-b337-4f3d-bf23-05f20d9aa9bb",
+			"version": [1, 0, 0]
+		},
+		{
+			"description": "Scripting",
+			"uuid": "2a27730e-9ff8-4e3c-9685-90d76d68e3e2",
+			"version": [1, 0, 0],
+			"type": "script",
+			"entry": "scripts/block_breaker_random_api150_v1.js"
+		}
+	],
+	"capabilities": ["script_eval"],
+	"dependencies": [
+		{
+			"module_name": "@minecraft/server",
+			"version": "1.5.0"
+		}
+	]
+}
