@@ -11,7 +11,7 @@ let current_frame = 0, next_frame = 1;
 let num_neighbours = 0;
 let px, py, cell_state;  // Calculating next cell states
 let block, index, block_type;
-let field_origin = {x:0, y:225, z:0}; // TODO: position the field relative to a tagged entity for multiple simulations.
+let field_origin = {x:0, y:125, z:0}; // TODO: position the field relative to a tagged entity for multiple simulations.
 let dimension = mc.world.getDimension("overworld");
 let cells = [
 				"minecraft:air",
