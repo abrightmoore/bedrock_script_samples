@@ -3,16 +3,16 @@ import * as mc from "@minecraft/server";
 // Based on Dingsel's efficient approach: https://www.youtube.com/watch?v=4Aoc_fGAmKg
 
 const block_types = [
-	["minecraft:stone", "stone_type","stone"],
-	["minecraft:stone", "stone_type","granite"],
-	["minecraft:stone", "stone_type","granite_smooth"],
-	["minecraft:stone", "stone_type","diorite"],
-	["minecraft:stone", "stone_type","diorite_smooth"],
-	["minecraft:stone", "stone_type","andesite"],
-	["minecraft:stone", "stone_type","andesite_smooth"],
-	["minecraft:dirt", "dirt_type","normal"],
-	["minecraft:dirt", "dirt_type","coarse"],
-	["minecraft:glowstone", undefined, undefined]
+	["minecraft:stone",{ stone_type : "stone" }],
+	["minecraft:stone",{ stone_type : "granite" }],
+	["minecraft:stone",{ stone_type : "granite_smooth" }],
+	["minecraft:stone",{ stone_type : "diorite" }],
+	["minecraft:stone",{ stone_type : "diorite_smooth" }],
+	["minecraft:stone",{ stone_type : "andesite" }],
+	["minecraft:stone",{ stone_type : "andesite_smooth" }],
+	["minecraft:dirt", { dirt_type : "normal" }],
+	["minecraft:dirt", { dirt_type : "coarse" }],
+	["minecraft:glowstone", undefined]
 ];
 
 function getRandomBlock() {
@@ -34,15 +34,14 @@ mc.system.runInterval(() => {
 	if (!block || block.permutation.matches("minecraft:air")) {
 		let newBlock = getRandomBlock();
 		let newBlockType = newBlock[0];
-		let newBlockStateName = newBlock[1];
-		let newBlockStateValue = newBlock[2];
+		let newBlockState = newBlock[1];
 		//let newState = newBlock[1];
-		if (newBlockStateName) {  // NOTE: Setting block states with "withState" is broken in server 1.5.0 API. Back in 1.6.0?
-			mc.world.sendMessage("State: "+JSON.stringify(newBlockStateName))
-			mc.world.sendMessage("Value: "+JSON.stringify(newBlockStateValue))
-			let newBlockSet = mc.BlockPermutation.resolve(newBlockType);
-			let perm = newBlockSet.withState(newBlockStateName,newBlockStateValue);
-			block.setPermutation(perm);
+		if (newBlockState != undefined) {  // NOTE: Setting block states with "withState" is broken in server 1.5.0 API. Back in 1.6.0?
+			// mc.world.sendMessage("State: "+JSON.stringify(newBlockStateName))
+			// mc.world.sendMessage("Value: "+JSON.stringify(newBlockStateValue))
+			let newBlockSet = mc.BlockPermutation.resolve(newBlockType, newBlock[1]); // withState deprecated
+			// let perm = newBlockSet.withState(newBlockStateName,newBlockStateValue);
+			block.setPermutation(newBlockSet);
 			return
 		}
 		block.setPermutation(mc.BlockPermutation.resolve(newBlockType));
