@@ -23,12 +23,12 @@ const block_placement_debug = false;
 
 let iteration = 0;			//	Count the number of times a Minecraft tick occurs
 let iteration_update = 0;	//	Count the number of times a game update occurs
-const update_every = 8;		//  Update the game on every nth frame. Min is 1, max is whatever (for an infrequently processed check
+const update_every = 4;		//  Update the game on every nth frame. Min is 1, max is whatever (for an infrequently processed check
 let initialised = false		//	Run-once at start flag
 
 const block_backlog = new Map(); //   For tracking the intended changes to the world. Location, block permutation, timestamp
-const block_backlog_limit = 1500;
-const remove_backlog_on_error = true;
+const block_backlog_limit = 600;
+const remove_backlog_on_error = false;
 
 function add_to_block_backlog( pos, block) {
 	let key = String(pos.x)+","+String(pos.y)+","+String(pos.z)
@@ -58,13 +58,13 @@ function send_alert(msg, data) {
 /*
 	These are the game specific variables
 */
-const field_size = 64;
+const field_size = 48;
 const field_frames = new Array(2);  // One current displayed frame, one working one. Double-buffered display.
 let current_frame = 0, next_frame = 1;
 let num_neighbours = 0;
 let px, py, cell_state;  // Calculating next cell states
 let block, index, block_type;
-const field_origin = {x:-900, y:256, z:0}; // TODO: position the field relative to a tagged entity for multiple simulations.
+const field_origin = {x:-1200, y:256, z:0}; // TODO: position the field relative to a tagged entity for multiple simulations.
 let cells = [
 				"minecraft:air",
 				"minecraft:iron_block",
@@ -118,10 +118,12 @@ function game_update() {
 	/* DO WORK */ 
 	// mc.world.sendMessage("game_update() has run");
 
-	// START CUSTOM LOGIC
+
 
 	if(block_backlog.size < block_backlog_limit) {
 
+
+		// START CUSTOM LOGIC	
 		current_frame = iteration_update%2;  // 0 or 1
 		next_frame = (iteration_update+1)%2; // 1 or 0
 		//  send_alert(current_frame, next_frame);
@@ -168,9 +170,11 @@ function game_update() {
 
 			};
 		};
+		//  END CUSTOM LOGIC
+		
 	};
 
-	//  END CUSTOM LOGIC
+
 
 
 	
@@ -204,15 +208,16 @@ function process_block_backlog(time_limit) {
 				let block = dimension.getBlock( val.p )
 				if(block) {
 					block.setPermutation( val.b );
+					remove_keys.push(keys[i]);	//	If there was no error, mark this location to be deleted.
 				};
 			};
-			remove_keys.push(keys[i]);	//	If there was no error, mark this location to be deleted.
+
 		} catch(error) {	//	If there's an error, keep the backlog entry in memory to try again some other time. TODO: Persistent errors should purge the block?
 			if(block_placement_debug) {
 				let val = block_backlog.get( keys[i] );
 				send_alert(keys[i], block_backlog.get( keys[i] ));
 				send_alert("process_backlog() error", error);	//	Errors can be normal, so consider doing nothing here
-				if(remove_backlog_on_error) {
+				if(remove_backlog_on_error == true) {
 					remove_keys.push(keys[i]);
 				};
 			};
