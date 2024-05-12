@@ -91,7 +91,7 @@ mc.system.runInterval(() => {
 	iteration += 1;
 
 	let players = mc.world.getAllPlayers();
-	if (players) {
+	if (players && players.length > 0) {
 		let px = players[0].location.x;
 		let py = players[0].location.y;
 		let pz = players[0].location.z;
@@ -104,12 +104,12 @@ mc.system.runInterval(() => {
 				let entity_2 = entities[i+1];
 				
 				let x1 = entity_1.location.x;
-				let y1 = entity_1.location.y;
+				let y1 = entity_1.location.y-1;
 				let z1 = entity_1.location.z;
-				let block_start = dimension.getBlock( {x: entity_1.location.x, y: entity_1.location.y-1, z: entity_1.location.z} ).permutation;
+				let block_start = dimension.getBlock( {x: x1, y: y1, z: z1} ).permutation;
 				
 				let x2 = entity_2.location.x;
-				let y2 = entity_2.location.y;
+				let y2 = entity_2.location.y-1;
 				let z2 = entity_2.location.z;
 				// let block_end = dimension.getBlock( entity_2.location );
 				
